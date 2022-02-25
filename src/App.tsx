@@ -1,24 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+import './App.css';
+import { ChangeEvent, FC, useMemo, useState } from 'react'
+import ListRecipes from './components/ListRecipes';
+import Title from './components/Title';
+
+const Errors = ({isError} : {isError: boolean}) => {
+  console.log("renderizou erro")
+
+  if (isError) {
+    return (
+      <p>Erradooo</p>      
+    )
+  }else{
+    return <></>
+  }
+}
+
+const App: FC = () => {
+  const [recipes, setRecipes] = useState<string[]>([
+    'Pão com Ovo',
+    'Bolo de Chocolate',
+    'Manga com Leite'  
+  ]);
+  const [isError, setError] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>("")
+  
+  const addItem = () => {
+    const newItem = "novo" + Math.random()
+    
+    // const newRecipes = recipes    
+    // newRecipes.push(newItem)
+    // setRecipes(newRecipes)
+
+    setRecipes([...recipes, newItem])
+  }
+
+  const componentError = useMemo(() => <Errors isError={isError} />, [isError]);
+
+  const handleChange = (event: any) => {
+    const value = event.target.value
+    if (value.length < 10){
+      setError(true)
+    }else{
+      setError(false)
+    }
+    setTitle(value)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Title value="Receitas de Vó" />
+      <ListRecipes data={recipes} />
+      <input type="text" value={title} onChange={handleChange} />
+      <button onClick={addItem}>Adicionar</button>
+      {componentError}
+      
+      {/* If you comment the line above: {componentError} and uncomment the line below <Erros .... />
+      So the component <Errors> will render many times. See the web browser console to get the difference with and without useMemo */}
+
+      {/* <Errors isError={isError} /> */}
     </div>
   );
 }
