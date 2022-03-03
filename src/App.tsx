@@ -1,9 +1,11 @@
 import './App.css';
 
 import './App.css';
-import { ChangeEvent, FC, useMemo, useState } from 'react'
+import { ChangeEvent, FC, useContext, useMemo, useState } from 'react'
 import ListRecipes from './components/ListRecipes';
 import Title from './components/Title';
+import AuthContext, { AuthProvider } from './contexts/AuthContext';
+import NavBar from './components/NavBar';
 
 const Errors = ({isError} : {isError: boolean}) => {
   console.log("renderizou erro")
@@ -25,7 +27,7 @@ const App: FC = () => {
   ]);
   const [isError, setError] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("")
-  
+
   const addItem = () => {
     const newItem = "novo" + Math.random()
     
@@ -48,19 +50,24 @@ const App: FC = () => {
     setTitle(value)
   }
 
-  return (
-    <div className="App">
-      <Title value="Receitas de Vó" />
-      <ListRecipes data={recipes} />
-      <input type="text" value={title} onChange={handleChange} />
-      <button onClick={addItem}>Adicionar</button>
-      {componentError}
-      
-      {/* If you comment the line above: {componentError} and uncomment the line below <Erros .... />
-      So the component <Errors> will render many times. See the web browser console to get the difference with and without useMemo */}
+  
 
-      {/* <Errors isError={isError} /> */}
-    </div>
+  return (    
+      <div className="App">
+          <AuthProvider>
+            <NavBar />
+            <Title value="Receitas de Vó" />
+            <ListRecipes data={recipes} />
+            <input type="text" value={title} onChange={handleChange} />
+            <button onClick={addItem}>Adicionar</button>
+            {componentError}
+            
+            {/* If you comment the line above: {componentError} and uncomment the line below <Erros .... />
+            So the component <Errors> will render many times. See the web browser console to get the difference with and without useMemo */}
+
+            {/* <Errors isError={isError} /> */}
+          </AuthProvider>
+      </div>
   );
 }
 

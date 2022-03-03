@@ -1,4 +1,5 @@
-import React, { FC, useCallback } from 'react'
+import React, { FC, useCallback, useContext } from 'react'
+import AuthContext from '../../contexts/AuthContext';
 
 let objects: any[] = []
 
@@ -7,6 +8,9 @@ function onlyUnique(value: any, index: number, self: any[]) { //it removes dupli
 }
 
 const ListRecipes: FC<{ data: string[] }> = ({ data }) => {
+
+  const { signed } = useContext(AuthContext);
+
   console.log("renderizou") 
 
   const handleClick = useCallback(() => {
@@ -19,7 +23,12 @@ const ListRecipes: FC<{ data: string[] }> = ({ data }) => {
 
   return (
     <ul>
-      {data.map(item => <li key={item} onClick={handleClick}>{item}</li>)}
+      {data.map(item => 
+        <li key={item} onClick={handleClick}>
+          {item}
+          {signed && <button>Clicar</button>}
+        </li>)
+      }      
     </ul>
   )
 }
